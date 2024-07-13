@@ -1,0 +1,48 @@
+<%- include('partials/header.ejs') %>
+<div class="container">
+    <% if(array.length > 0) { %>
+        <div class="row mb-2">
+            <% array.forEach((item, index) => { %>
+                <div class="col-md-6" id="post-<%= index %>">
+                    <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                        <div class="col p-4 d-flex flex-column position-static">
+                            <h3 class="mb-0"><%= item[0] %></h3>
+                            <p class="card-text mb-auto"><%= item[1] %></p>
+                            <a href="<%= item[2] %>" class="stretched-link">Continue reading</a>
+                        </div>
+                        <div class="col-auto d-none d-lg-block">
+                            <img src="<%= item[3] %>" alt="Image" width="200" height="250">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary rounded-pill px-3" type="button" onclick="handleUpdate('<%= index %>')">Update</button>
+                    <button class="btn btn-danger rounded-pill px-3" type="button" onclick="handleDelete('<%= index %>')">Delete</button>
+
+                </div>
+            <% }) %>
+        </div>
+    <% } else { %>
+        <p>You have no blog posts.</p>
+        <a href="/postBlog" class="stretched-link">Post blog now?</a>
+    <% } %>
+</div>
+<%- include('partials/footer.ejs') %>
+
+<script>
+function handleUpdate(id) {
+    window.location.href = `/edit/${id}`;
+}
+
+function handleDelete(id) {
+    fetch(`/delete/${id}`, {
+        method: 'DELETE',
+    }).then(res => {
+        if (res.ok) {
+            document.getElementById(`post-${id}`).remove();
+        } else {
+            alert("Failed to delete the post.");
+        }
+    }).catch(error => {
+        console.error('Error:', error);
+    });
+}
+</script>

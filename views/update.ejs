@@ -1,0 +1,36 @@
+<%- include('partials/header.ejs') %>
+<div class="container">
+    <form action="/update/<%= id %>" method="post" onsubmit="event.preventDefault(); handleUpdate2('<%= id %>')">
+        <input type="hidden" name="_method" value="PUT">
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" value="<%= title %>" required>
+        <label for="content">Content</label>
+        <input type="text" name="content" id="content" value="<%= content %>" required>
+        <label for="link">Link</label>
+        <input type="url" id="link" name="link" value="<%= link %>" required>
+        <label for="image">Image URL</label>
+        <input type="url" id="image" name="image" value="<%= image %>" required>
+        <input type="submit" value="Submit">
+    </form>
+</div>
+<%- include('partials/footer.ejs') %>
+
+<script>
+function handleUpdate2(id) {
+    fetch(`/update/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(new FormData(document.querySelector('form')))
+    }).then(res => {
+        if (res.ok) {
+            window.location.href = `/`;
+        } else {
+            alert("Failed to update the post.");
+        }
+    }).catch(error => {
+        console.error('Error:', error);
+    });
+}
+</script>
